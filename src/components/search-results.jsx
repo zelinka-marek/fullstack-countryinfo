@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+
 function CountryDetails(props) {
   const { country } = props;
 
@@ -24,9 +26,22 @@ function CountryDetails(props) {
 export function SearchResults(props) {
   const { list } = props;
 
+  const [selected, setSelected] = useState(null);
+
+  const prevListRef = useRef(list);
+
+  useEffect(() => {
+    if (list !== prevListRef.current) {
+      setSelected(null);
+      prevListRef.current = list;
+    }
+  }, [list]);
+
   return (
     <div>
-      {list === null ? (
+      {selected ? (
+        <CountryDetails country={selected} />
+      ) : list === null ? (
         <i>Try searching for your favorite country first</i>
       ) : list.length === 0 ? (
         <i>No countries found</i>
@@ -37,7 +52,12 @@ export function SearchResults(props) {
       ) : (
         <ul>
           {list.map((country) => (
-            <li key={country.cca2}>{country.name.common}</li>
+            <li key={country.cca2}>
+              {country.name.common}{" "}
+              <button type="button" onClick={() => setSelected(country)}>
+                show
+              </button>
+            </li>
           ))}
         </ul>
       )}
