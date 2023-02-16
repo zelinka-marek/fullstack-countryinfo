@@ -7,8 +7,9 @@ export function App() {
   const [countryList, setCountryList] = useState(null);
 
   const search = (country) => {
-    getCountryList(country).then(setCountryList);
-    console.log(`Searching for ${country} info`);
+    getCountryList(country)
+      .then(setCountryList)
+      .catch(() => setCountryList([]));
   };
 
   return (
